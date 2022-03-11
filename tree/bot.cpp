@@ -2,9 +2,11 @@
 #include <dpp/nlohmann/json.hpp>
 #include <iomanip>
 #include <sstream>
+#include <cstdlib>
 
 #include "bot.h"
 #include "calculator.hh"
+#include "config.hh"
 
 using json = nlohmann::json;
 
@@ -68,5 +70,18 @@ int main(int argc, char const *argv[]) {
     });
     /* Start bot */
     bot.start(false);
+    return 0;
+}
+
+//void configure_bot(dpp::cluster & bot, const json & config, CharacterSheetRepo & repo);
+
+
+int main(int argc, char const *argv[]) {
+    json config = get_config();
+    dpp::cluster bot(get_secret_key(config));
+    //CharacterSheetRepo repo = get_repository(config);
+    //configure_bot(bot, config, repo);
+    bot.start(false);
+    // Tu się zwiesi główny wątek w oczekiwaniu na polecenie zamknięcia programu i posprzątania po sobie
     return 0;
 }
