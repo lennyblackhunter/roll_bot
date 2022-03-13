@@ -36,3 +36,5 @@ add_executable(bot
 )
 
 target_link_libraries(bot calculator dpp)
+
+add_subdirectory(cthulhu)

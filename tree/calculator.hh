@@ -11,6 +11,7 @@
 
 #include "tokens.hh"
 #include "rpn.hh"
+#include "cthulhu/utils.hh"
 
 template <typename T>
 struct BinaryOperator {
@@ -92,17 +93,6 @@ T extract(std::stack<T> & stack) {
     return top;
 }
 
-template <typename T>
-std::optional<T> from_str(const std::string_view & s) {
-    std::stringstream ss;
-    ss << s;
-    T t;
-    ss >> t;
-    if (ss.fail()) {
-        std::cout << "miau2\n";
-        return std::nullopt;}
-    return t;
-}
 
 template <typename T>
 class NodeBuilder {
