@@ -33,10 +33,10 @@ add_executable(tests
 add_library(character_sheet
     character_sheet.cc
     character_sheet.hh
-)
+        user_input.cc user_input.hh)
 
 target_link_libraries(character_sheet
-    fmt
+    fmt calculator
 )
 
 target_link_libraries(tests

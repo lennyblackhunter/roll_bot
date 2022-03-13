@@ -5,6 +5,8 @@
 
 #include "bot.h"
 #include "calculator.hh"
+#include "cthulhu/user_input.hh"
+#include "cthulhu/character_sheet.hh"
 
 using json = nlohmann::json;
 
@@ -44,22 +46,15 @@ int main(int argc, char const *argv[]) {
             );
         }
         else if (command == "!roll") {
-            std::string line;
-            std::getline(ss, line);
-            auto node_builder = NodeBuilder<int>(
-                    {
-                        BinaryOperator<int>('k', roll_and_add, 5),
-                        BinaryOperator<int>('+', [](int x, int y) { return x + y; },3),
-                        BinaryOperator<int>('*', [](int x, int y) { return x * y; },4),
-                        });
-            auto my_node = node_builder.string_to_node(line);
+            auto request = request_from_string(ss);
+            if (request_from_string(ss)) {
+                std::string character_name = event.msg.member.nickname;
+
+            }
+
+
             std::string answer;
-            if (my_node) {
-                answer = std::to_string(my_node->evaluate());
-            }
-            else {
-                answer = "to nie jest poprawny napis";
-            }
+            answer = "to nie jest poprawny napis";
             bot.message_create(
                     dpp::message(
                             event.msg.channel_id,
