@@ -27,7 +27,7 @@ target_link_libraries(rpn_test tokenizer RPN)
 add_library(calculator
         calculator.cc
         tokens.hh
-        rpn.hh bot.cpp bot.h calculator.hh)
+        rpn.hh bot.cpp bot.h calculator.hh commands.cc commands.hh)
 
 target_link_libraries(calculator tokenizer RPN)
 
@@ -35,6 +35,6 @@ add_executable(bot
     bot.cpp
 )
 
-target_link_libraries(bot calculator dpp)
+target_link_libraries(bot calculator dpp character_sheet)
 
 add_subdirectory(cthulhu)

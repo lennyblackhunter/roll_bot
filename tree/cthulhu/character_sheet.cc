@@ -66,6 +66,7 @@ void CharacterSheetRepo::load() {
         json j;
         CharacterSheet character_sheet;
         file >> j;
+        std::cerr << entry.path() << ": " << j << std::endl;
         character_sheet = j;
         character_sheets[character_sheet.get_name()] = character_sheet;
     }
@@ -81,8 +82,11 @@ void CharacterSheetRepo::save() {
     }
 }
 
-std::map<std::string, CharacterSheet> CharacterSheetRepo::get_character_sheets() {
-    return character_sheets;
+CharacterSheet* CharacterSheetRepo::get_character_sheet(const std::string & s) {
+    if (character_sheets.count(s)) {
+        return &character_sheets[s];
+    }
+    return nullptr;
 }
 
 template<>
