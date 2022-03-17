@@ -53,8 +53,9 @@ struct RollResult {
 
 class CharacterSheet {
     std::string name;
-    StatsT stats;
+    //StatsT stats;
 public:
+    StatsT stats;
 
     CharacterSheet() = default;
     CharacterSheet(std::string name, StatsT stats);
@@ -70,12 +71,13 @@ struct RepoError : public std::invalid_argument {
 };
 
 class CharacterSheetRepo {
-    fs::path data_folder;
+    //fs::path data_folder;
     std::map<std::string, CharacterSheet> character_sheets;
 public:
+    fs::path data_folder;
     explicit CharacterSheetRepo(std::string folder);
 
-    std::map<std::string, CharacterSheet> get_character_sheets();
+    CharacterSheet* get_character_sheet(const std::string & s);
     void add(CharacterSheet character_sheet);
     void load();
     void save();

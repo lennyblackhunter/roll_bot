@@ -2,7 +2,16 @@
 
 #include <string>
 
-#include <nlohmann/json.hpp>
+#include <dpp/nlohmann/json.hpp>
+
+/* Config structure:
+ *
+ * {
+ *  "repository_dir": "path/to/repository"
+ * }
+ */
+
+
 
 nlohmann::json get_config();
 

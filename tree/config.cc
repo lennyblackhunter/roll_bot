@@ -1,6 +1,7 @@
 #include <string>
 #include <cstdlib>
-#include <nlohmann/json.hpp>
+#include <fstream>
+#include <dpp/nlohmann/json.hpp>
 
 using nlohmann::json;
 
@@ -15,7 +16,7 @@ std::string get_config_path() {
 
 json get_config() {
     json configdocument;
-    std::ifstream configfile(get_config_path());
+    std::ifstream configfile(get_config_path(), configfile.in);
     configfile >> configdocument;
     return configdocument;
 }
