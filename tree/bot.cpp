@@ -1,17 +1,19 @@
-#include <dpp/dpp.h>
-#include <dpp/nlohmann/json.hpp>
+#include <chrono>
+#include <thread>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
 #include <functional>
 
+#include <dpp/dpp.h>
+#include <dpp/nlohmann/json.hpp>
+
 #include "bot.h"
+#include "config.hh"
 #include "commands.hh"
 #include "calculator.hh"
 #include "cthulhu/user_input.hh"
 #include "cthulhu/character_sheet.hh"
-#include "config.hh"
-
 
 using json = nlohmann::json;
 
@@ -21,12 +23,14 @@ int main(int argc, char const *argv[]) {
 //    json configdocument;
 //    std::ifstream configfile("config.json");
 //    configfile >> configdocument;
+    volatile bool button = true;
     CharacterSheetRepo repo{"/home/benhauer-adm/Nie_praca/roll_bot/roll_bot/tree/cthulhu/test/repo"};
     repo.load();
 
     using namespace std::placeholders;
     std::map<std::string, MsgHandlerT> command_map {
             {"!roll", std::bind(on_roll, repo, _1, _2, _3)},
+            {"!goodbye", std::bind(on_turn_off, &button, _1, _2, _3)},
     };
 
     /* Setup the bot */
@@ -49,7 +53,11 @@ int main(int argc, char const *argv[]) {
         command_map[command](ss, event, bot);
     });
     /* Start bot */
-    bot.start(false);
+    bot.start(true);
+    while (button) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    };
+    repo.save();
     return 0;
 };
 

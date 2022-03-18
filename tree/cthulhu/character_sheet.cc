@@ -31,10 +31,10 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
         possible_tens_values[i] = random_number(1, 9);
     }
     if (request.modifier >= 0) {
-        tens = *std::max_element(possible_tens_values.begin(), possible_tens_values.end());
+        tens = *std::min_element(possible_tens_values.begin(), possible_tens_values.end());
     }
     else {
-        tens = *std::min_element(possible_tens_values.begin(), possible_tens_values.end());
+        tens = *std::max_element(possible_tens_values.begin(), possible_tens_values.end());
     }
     int roll_value = tens * 10 + units;
     character_stat.used = true;
