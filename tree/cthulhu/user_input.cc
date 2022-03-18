@@ -35,11 +35,8 @@ std::optional<StatRollRequest> request_from_string(std::istream & ss) {
     std::string s1;
     std::string s2;
     ss >> stat;
-    std::cerr << "stat: " << stat << std::endl;
     ss >> s1;
-    std::cerr << s1;
     ss >> s2;
-    std::cerr << s2;
     if (!consume_token(s1, modifier, hardness) || !consume_token(s2, modifier, hardness)) {
         return std::nullopt;
     }

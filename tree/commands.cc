@@ -1,4 +1,3 @@
-#include <map>
 #include <string>
 #include <sstream>
 #include <dpp/dpp.h>
@@ -7,36 +6,36 @@
 #include "cthulhu/user_input.hh"
 #include "cthulhu/character_sheet.hh"
 
-void on_roll(CharacterSheetRepo & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+std::string test_result(const dpp::message_create_t & event, const RollResult & result) {
     std::string answer;
+    answer = fmt::format("{} tested {} ({}) and got {} - test passed OwO",
+                         event.msg.member.get_mention(), result.stat, result.target, result.result);
+    if (result.result > result.target) {
+        int diff = result.result - result.target;
+        answer = fmt::format("{} tested {} ({}) and got {} - test failed, you need to use {} luck points",
+                             event.msg.member.get_mention(), result.stat, result.target, result.result, diff);
+    }
+    return answer;
+}
+
+void on_roll(CharacterSheetRepo & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+    std::string answer = "i don't understand :<";
     auto request = request_from_string(ss);
     if (request) {
         std::string character_name = event.msg.member.nickname;
-        std::cerr << "data folder: " << repo.data_folder << std::endl;
         auto character_sheet = repo.get_character_sheet(character_name);
+        answer = "no such character";
         if (character_sheet)  {
+            answer = "no such stat";
             if (character_sheet->stats.count(request->stat)) {
-//                std::cerr << "name: " << character_name << std::endl;
-//                std::cerr << "used: " << character_sheet->stats[request->stat].used << std::endl;
-//                std::cerr << "value: " << character_sheet->stats[request->stat].value << std::endl;
                 RollResult result = character_sheet->roll(*request);
-                answer = fmt::format("{} rolled {} on {}, should be below {}",
-                                     character_name, result.result, result.stat, result.target);
+                answer = test_result(event, result);
             }
-            else {
-                answer = "nie ma takiej statystyki";
-            }
+        }
+    }
+    bot.message_create(dpp::message(event.msg.channel_id,answer));
+}
 
-        }
-        else {
-            answer = "nie ma takiej postaci";
-        }
-    }
-    else {
-        answer = "to nie jest poprawny napis";
-    }
-    bot.message_create(
-            dpp::message(
-                    event.msg.channel_id,
-                    answer));
+void on_turn_off(volatile bool* button, std::stringstream & ss, const dpp::message_create_t &event, dpp::cluster &bot) {
+    *button = false;
 }
