@@ -1,7 +1,10 @@
 #include <string>
+#include <atomic>
 #include <sstream>
 #include <dpp/dpp.h>
 #include <fmt/core.h>
+
+#include <dpp/nlohmann/json.hpp>
 
 #include "cthulhu/user_input.hh"
 #include "cthulhu/character_sheet.hh"
@@ -18,17 +21,21 @@ std::string test_result(const dpp::message_create_t & event, const RollResult & 
     return answer;
 }
 
-void on_roll(CharacterSheetRepo & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
     std::string answer = "i don't understand :<";
     auto request = request_from_string(ss);
     if (request) {
         std::string character_name = event.msg.member.nickname;
-        auto character_sheet = repo.get_character_sheet(character_name);
+        auto character_sheet = repo.load()->get_character_sheet(character_name);
         answer = "no such character";
         if (character_sheet)  {
             answer = "no such stat";
             if (character_sheet->stats.count(request->stat)) {
+                json j = *character_sheet;
+                std::cerr << j << std::endl;
                 RollResult result = character_sheet->roll(*request);
+                json l = *character_sheet;
+                std::cerr << l << std::endl;
                 answer = test_result(event, result);
             }
         }

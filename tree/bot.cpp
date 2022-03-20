@@ -1,5 +1,7 @@
 #include <chrono>
 #include <thread>
+#include <atomic>
+#include <memory>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
@@ -24,12 +26,14 @@ int main(int argc, char const *argv[]) {
 //    std::ifstream configfile("config.json");
 //    configfile >> configdocument;
     volatile bool button = true;
-    CharacterSheetRepo repo{"/home/benhauer-adm/Nie_praca/roll_bot/roll_bot/tree/cthulhu/test/repo"};
-    repo.load();
+    std::atomic<CharacterSheetRepo*> repo(
+            new CharacterSheetRepo("/home/benhauer-adm/Nie_praca/roll_bot/roll_bot/tree/cthulhu/test/repo")
+                    );
+    repo.load()->load();
 
     using namespace std::placeholders;
     std::map<std::string, MsgHandlerT> command_map {
-            {"!roll", std::bind(on_roll, repo, _1, _2, _3)},
+            {"!roll", [&](std::stringstream & x, const dpp::message_create_t & y, dpp::cluster & z){on_roll(repo, x, y, z);}},
             {"!goodbye", std::bind(on_turn_off, &button, _1, _2, _3)},
     };
 
@@ -57,7 +61,9 @@ int main(int argc, char const *argv[]) {
     while (button) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     };
-    repo.save();
+    json j = *repo.load()->get_character_sheet("Annabelle");
+    std::cerr << j << std::endl;
+    repo.load()->save();
     return 0;
 };
 
