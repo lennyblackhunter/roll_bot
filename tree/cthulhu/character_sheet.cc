@@ -38,6 +38,7 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
     }
     int roll_value = tens * 10 + units;
     character_stat.used = true;
+    //std::cerr << "used in roll: " << character_stat.used << std::endl;
     return {request.stat, roll_value, character_stat.get(request.hardness)};
 }
 
@@ -66,7 +67,6 @@ void CharacterSheetRepo::load() {
         json j;
         CharacterSheet character_sheet;
         file >> j;
-        std::cerr << entry.path() << ": " << j << std::endl;
         character_sheet = j;
         character_sheets[character_sheet.get_name()] = character_sheet;
     }
@@ -77,6 +77,7 @@ void CharacterSheetRepo::save() {
         json j = character_sheet;
         auto path_to_save = data_folder / name;
         path_to_save += ".json";
+        std::cerr << "path: " << path_to_save << std::endl;
         std::fstream file(path_to_save, file.out);
         file << j;
     }
