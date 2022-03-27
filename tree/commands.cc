@@ -81,6 +81,20 @@ void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, co
     bot.message_create(dpp::message(event.msg.channel_id, answer));
 }
 
+void on_sheet_request(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+    std::string character_name;
+    getline(ss, character_name);
+    ltrim(character_name);
+    if (!ss) {
+        character_name = event.msg.member.nickname;
+    }
+    auto character_sheet = repo.load()->get_character_sheet(character_name);
+    if (!character_sheet) {
+        std::cerr << "Could not found character sheet of '" << character_name << "'\n";
+    }
+    bot.message_create(dpp::message(event.msg.channel_id, to_string(*character_sheet)));
+}
+
 void on_turn_off(volatile bool* button, std::stringstream & ss, const dpp::message_create_t &event, dpp::cluster &bot) {
     *button = false;
 }

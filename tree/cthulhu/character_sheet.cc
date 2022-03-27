@@ -9,7 +9,7 @@
 #include "../calculator.hh"
 #include "utils.hh"
 
-Stat::Stat(int value, bool used) : value(value), used(used) {}
+Stat::Stat(int value, bool used, StatType stat_type) : value(value), used(used), stat_type(stat_type) {}
 
 int Stat::get(Hardness h) {return value / static_cast<int>(h);}
 
@@ -17,6 +17,13 @@ extern const std::map<std::string, Hardness> hardness_map {
         {"normal", Hardness::NORMAL},
         {"hard", Hardness::HARD},
         {"brutal", Hardness::BRUTAL},
+};
+
+extern const std::map<StatType, std::string> stat_types_map {
+        {StatType::ABILITY, "ability"},
+        {StatType::ATTRIBUTE, "attribute"},
+        {StatType::RESOURCE, "resource"},
+        {StatType::IDK, "magic_or_health"},
 };
 
 CharacterSheet::CharacterSheet(std::string name, StatsT stats): name(std::move(name)), stats(std::move(stats)) {}
@@ -52,6 +59,30 @@ void CharacterSheet::set_stat(const std::string & stat_name, int new_value) {
 
 int CharacterSheet::get_stat_value(const std::string & stat_name) {
     return stats[stat_name].value;
+}
+
+std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_sheet) {
+    out << character_sheet.name;
+    for (const auto & [stat_name, stat] : character_sheet.stats) {
+        if (stat.stat_type == StatType::IDK || stat.stat_type == StatType::RESOURCE) {
+            out << "\t\t" << stat_name << ": " << stat.value;
+        }
+    }
+    out << "\n\n";
+    out << "Attributes:\n";
+    for (const auto & [stat_name, stat] : character_sheet.stats) {
+        if (stat.stat_type == StatType::ATTRIBUTE) {
+            out << stat_name << ": " << stat.value << "\n";
+        }
+    }
+    out << "\n";
+    out << "Abilities:\n";
+    for (const auto & [stat_name, stat] : character_sheet.stats) {
+        if (stat.stat_type == StatType::ABILITY) {
+            out << stat_name << ": " << stat.value << "\n";
+        }
+    }
+    return out;
 }
 
 CharacterSheetRepo::CharacterSheetRepo(std::string folder): data_folder(std::move(folder)) {
