@@ -37,7 +37,7 @@ struct Stat {
     bool used;
     StatType stat_type;
     Stat() = default;
-    Stat(int value, bool used=false, StatType stat_type=StatType::ABILITY);
+    explicit Stat(int value, bool used=false, StatType stat_type=StatType::ABILITY);
     int get(Hardness hardness = Hardness::NORMAL);
 };
 
