@@ -12,6 +12,8 @@ int main() {
 
     std::string name = "Annabelle";
     std::map<std::string, Stat> stats = {
+            {"szczęście", Stat(50)},
+            {"poczytalność", Stat(50)},
             {"korzystanie_z_bibliotek", Stat(30, false)},
             {"okultyzm", Stat(25, false)},
             {"urok_osobisty", Stat(30, false)},

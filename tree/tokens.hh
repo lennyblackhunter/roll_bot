@@ -26,4 +26,4 @@ public:
 
 std::ostream & operator<<(std::ostream & out, const Token & token);
 
-std::optional<std::vector<Token> > tokenize(const std::string & str, const std::vector<char> &);
+std::optional<std::vector<Token>> tokenize(const std::string & str, const std::vector<char> &);

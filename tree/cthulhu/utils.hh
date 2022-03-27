@@ -4,6 +4,12 @@
 #include <algorithm>
 #include <cctype>
 
+inline std::string& ltrim(std::string& s, const char* t = " \t\n\r\f\v")
+{
+    s.erase(0, s.find_first_not_of(t));
+    return s;
+}
+
 inline std::string to_lower(const std::string_view & data) {
     std::string result{data};
     std::transform(data.begin(), data.end(), result.begin(),

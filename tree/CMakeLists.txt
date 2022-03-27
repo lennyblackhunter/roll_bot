@@ -9,15 +9,16 @@ add_library(tokenizer
 
 add_library(RPN
         rpn.cc
-        rpn.cc
         rpn.hh)
 
 add_executable(tokens_test
         tokens_test.cpp
         tokens.hh
+        calculator.cc
+        calculator.hh
         )
 
-target_link_libraries(tokens_test tokenizer)
+target_link_libraries(tokens_test tokenizer RPN)
 
 add_executable(rpn_test
         rpn_test.cc)
@@ -27,7 +28,13 @@ target_link_libraries(rpn_test tokenizer RPN)
 add_library(calculator
         calculator.cc
         tokens.hh
-        rpn.hh bot.cpp bot.h calculator.hh commands.cc commands.hh)
+        rpn.hh
+        rpn.cc
+        bot.cpp
+        bot.h
+        calculator.hh
+        commands.cc
+        commands.hh)
 
 target_link_libraries(calculator tokenizer RPN)
 
