@@ -54,7 +54,7 @@ std::string CharacterSheet::get_name() {
 }
 
 void CharacterSheet::set_stat(const std::string & stat_name, int new_value) {
-    stats[stat_name] = new_value;
+    stats[stat_name].value = new_value;
 }
 
 int CharacterSheet::get_stat_value(const std::string & stat_name) {
