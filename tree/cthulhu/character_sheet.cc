@@ -46,6 +46,14 @@ std::string CharacterSheet::get_name() {
     return name;
 }
 
+void CharacterSheet::set_stat(const std::string & stat_name, int new_value) {
+    stats[stat_name] = new_value;
+}
+
+int CharacterSheet::get_stat_value(const std::string & stat_name) {
+    return stats[stat_name].value;
+}
+
 CharacterSheetRepo::CharacterSheetRepo(std::string folder): data_folder(std::move(folder)) {
     if (not fs::is_directory(data_folder)) {
         throw RepoError(fmt::format("{} should be a path to an existing directory!", data_folder.string())); 

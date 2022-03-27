@@ -2,6 +2,38 @@
 #include <iostream>
 
 #include "character_sheet.hh"
+#include "user_input.hh"
+
+/*
+ * TO DO:
+ * validate character name and replace spaces with '_'
+ * validate dice expression
+ */
+std::optional<StatChangeRequest> stat_change_from_string(std::stringstream & ss) {
+    std::string character_name;
+    std::string stat;
+    ChangeType type;
+    std::string s;
+    ss >> character_name;
+    ss >> stat;
+    getline(ss, s);
+    ltrim(s);
+    if (s[0] == '+') {
+        type = ChangeType::HIGHER;
+    }
+    else if (s[0] == '-') {
+        type = ChangeType::LOWER;
+    }
+    else if (s[0] == '=') {
+        type = ChangeType::SET;
+    }
+    else {
+        return std::nullopt;
+    }
+    s.erase(0, 1);
+    ltrim(s);
+    return StatChangeRequest(character_name, stat, type, s);
+}
 
 bool consume_token(const std::string & s, int & modifier, Hardness & hardness) {
     if (s.empty()) {
