@@ -12,17 +12,40 @@ int main() {
 
     std::string name = "Annabelle";
     std::map<std::string, Stat> stats = {
-            {"szczęście", Stat(50)},
-            {"poczytalność", Stat(50)},
+            {"wytrzymałość", Stat(12, false, StatType::IDK)},
+            {"magia", Stat(7, false, StatType::IDK)},
+            {"szczęście", Stat(50, false, StatType::RESOURCE)},
+            {"poczytalność", Stat(50, false, StatType::RESOURCE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
             {"korzystanie_z_bibliotek", Stat(30, false)},
             {"okultyzm", Stat(25, false)},
             {"urok_osobisty", Stat(30, false)},
     };
-    CharacterSheet example_sheet = CharacterSheet(name, stats);
+    std::string anna_name = "Anna";
+    std::map<std::string, Stat> anna_stats = {
+            {"wytrzymałość", Stat(12, false, StatType::IDK)},
+            {"magia", Stat(7, false, StatType::IDK)},
+            {"szczęście", Stat(50, false, StatType::RESOURCE)},
+            {"poczytalność", Stat(50, false, StatType::RESOURCE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
+            {"korzystanie_z_bibliotek", Stat(30, false)},
+            {"okultyzm", Stat(25, false)},
+            {"urok_osobisty", Stat(30, false)},
+    };
+    CharacterSheet example_sheet = CharacterSheet(anna_name, anna_stats);
     json sheet_json = example_sheet;
-//    std::cout << sheet_json << std::endl;
+    std::cout << sheet_json << std::endl;
+    std::cout << "miau?" << std::endl;
     repo.load();
-    std::cout << repo.get_character_sheets()["Stefan"].get_name() << std::endl;
+    std::cout << "miau" << std::endl;
+    std::cout << repo.get_character_sheet("Stefan")->get_name() << std::endl;
+    std::cout << "miau!" << std::endl;
     repo.add(example_sheet);
+    std::cout << "miau!!" << std::endl;
     repo.save();
 }

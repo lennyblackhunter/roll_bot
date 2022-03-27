@@ -35,6 +35,7 @@ int main(int argc, char const *argv[]) {
     std::map<std::string, MsgHandlerT> command_map {
             {"!roll", [&](std::stringstream & x, const dpp::message_create_t & y, dpp::cluster & z){on_roll(repo, x, y, z);}},
             {"!stat", [&](std::stringstream & x, const dpp::message_create_t & y, dpp::cluster & z){on_set_stat(repo, x, y, z);}},
+            {"!sheet", [&](std::stringstream & x, const dpp::message_create_t & y, dpp::cluster & z){on_sheet_request(repo, x, y, z);}},
             {"!goodbye", std::bind(on_turn_off, &button, _1, _2, _3)},
     };
 

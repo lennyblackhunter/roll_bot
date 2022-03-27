@@ -15,7 +15,16 @@ namespace fs = std::filesystem;
 enum class Hardness {
     NORMAL = 1,
     HARD = 2,
-    BRUTAL = 5
+    BRUTAL = 5,
+};
+
+enum class StatType {
+    ABILITY,
+    ATTRIBUTE,
+    //luck and sanity
+    RESOURCE,
+    //magic and health
+    IDK,
 };
 
 extern const std::map<std::string, Hardness> hardness_map;
@@ -26,12 +35,13 @@ std::optional<Hardness> from_str<Hardness>(const std::string_view & s);
 struct Stat {
     int value;
     bool used;
-    Stat(int value, bool used=false);
+    StatType stat_type;
     Stat() = default;
+    Stat(int value, bool used=false, StatType stat_type=StatType::ABILITY);
     int get(Hardness hardness = Hardness::NORMAL);
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Stat, value, used);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Stat, value, used, stat_type);
 
 
 using StatsT = std::map<std::string, Stat>;
@@ -66,6 +76,9 @@ public:
     void set_stat(const std::string & stat_name, int new_value);
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(CharacterSheet, name, stats);
+
+    friend
+    std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_sheet);
 };
 
 struct RepoError : public std::invalid_argument {
