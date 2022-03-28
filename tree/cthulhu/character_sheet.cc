@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <fmt/core.h>
 
-#include "character_sheet.hh"
-#include "../calculator.hh"
-#include "utils.hh"
+#include "calculator.hh"
+#include "cthulhu/character_sheet.hh"
+#include "cthulhu/utils.hh"
 
 Stat::Stat(int value, bool used, StatType stat_type) : value(value), used(used), stat_type(stat_type) {}
 

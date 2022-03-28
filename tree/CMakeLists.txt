@@ -3,6 +3,8 @@ project(learning_c__)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(.)
+
 add_library(tokenizer
         tokens.cc
         ../sort.hh)

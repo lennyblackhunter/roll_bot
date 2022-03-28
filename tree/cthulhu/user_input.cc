@@ -1,8 +1,8 @@
 #include <string>
 #include <iostream>
 
-#include "character_sheet.hh"
-#include "user_input.hh"
+#include "cthulhu/character_sheet.hh"
+#include "cthulhu/user_input.hh"
 
 /*
  * TO DO:
