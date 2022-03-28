@@ -3,7 +3,6 @@
 
 #include "rpn.hh"
 #include "tokens.hh"
-#include "../sort.hh"
 
 
 void test1() {
@@ -22,7 +21,6 @@ void test1() {
     if (to_rpn(input) != expected) {
         std::cerr << "Error on 1";
     }
-    print_vec(to_rpn(input).value());
 }
 
 void test2() {
@@ -48,7 +46,6 @@ void test2() {
     if (to_rpn(input) != expected) {
         std::cerr << "Error on 2";
     }
-    print_vec(to_rpn(input).value());
 }
 
 void test3() {
@@ -77,5 +74,4 @@ int main() {
         Token(OPERATOR, "+"),
         Token(TOKEN_LITERAL, "321")
     };
-    print_vec(to_rpn(input).value());
 }
