@@ -7,7 +7,7 @@ include_directories(.)
 
 add_library(tokenizer
         tokens.cc
-        ../sort.hh)
+ )
 
 add_library(RPN
         rpn.cc
