@@ -5,45 +5,25 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
 
-add_library(tokenizer
-        tokens.cc
- )
+add_library(tokenizer tokens.cc)
 
-add_library(RPN
-        rpn.cc
-        rpn.hh)
+add_library(RPN rpn.cc)
 
-add_executable(tokens_test
-        tokens_test.cpp
-        tokens.hh
-        calculator.cc
-        calculator.hh
-        )
+add_executable(tokens_test tokens_test.cpp)
 
-target_link_libraries(tokens_test tokenizer RPN)
+target_link_libraries(tokens_test calculator tokenizer RPN)
 
-add_executable(rpn_test
-        rpn_test.cc)
-
+add_executable(rpn_test rpn_test.cc)
 target_link_libraries(rpn_test tokenizer RPN)
 
-add_library(calculator
-        calculator.cc
-        tokens.hh
-        rpn.hh
-        rpn.cc
-        bot.cpp
-        bot.h
-        calculator.hh
-        commands.cc
-        commands.hh)
+add_library(calculator calculator.cc)
 
 target_link_libraries(calculator tokenizer RPN)
 
-add_executable(bot
-    bot.cpp
-)
+add_library(commands commands.cc)
+target_link_libraries(commands cthulhu-user_input cthulhu-character_sheet)
 
-target_link_libraries(bot calculator dpp character_sheet)
+add_executable(bot bot.cpp)
+target_link_libraries(bot calculator commands dpp cthulhu-character_sheet)
 
 add_subdirectory(cthulhu)
