@@ -26,19 +26,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
-add_executable(tests
-    test.cc
-)
+add_library(cthulhu-character_sheet character_sheet.cc)
+target_link_libraries(cthulhu-character_sheet fmt calculator)
 
-add_library(character_sheet
-    character_sheet.cc
-    character_sheet.hh
-        user_input.cc user_input.hh)
+add_library(cthulhu-user_input user_input.cc)
+target_link_libraries(cthulhu-user_input cthulhu-character_sheet)
 
-target_link_libraries(character_sheet
-    fmt calculator
-)
-
-target_link_libraries(tests
-    character_sheet
-)
+add_executable(cthulhu-tests test.cc)
+target_link_libraries(cthulhu-tests cthulhu-character_sheet)
