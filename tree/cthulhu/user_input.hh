@@ -3,7 +3,7 @@
 #include <string>
 #include <optional>
 
-#include "character_sheet.hh"
+#include "cthulhu/character_sheet.hh"
 
 enum class ChangeType {
     SET,

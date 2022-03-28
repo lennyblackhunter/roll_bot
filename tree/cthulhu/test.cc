@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "character_sheet.hh"
-#include "utils.hh"
+#include "cthulhu/character_sheet.hh"
+#include "cthulhu/utils.hh"
 
 int main() {
 //    Stat s{123, false};
