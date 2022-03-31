@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
 
+# Configure DPP
+include_directories(DPP/include)
+add_subdirectory(DPP)
+
 add_library(tokenizer tokens.cc)
 
 add_library(RPN rpn.cc)
