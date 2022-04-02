@@ -21,8 +21,8 @@ struct BinaryOperator {
     BinaryOperator() = default;
     BinaryOperator(char operation_symbol, std::function<T(T,T)> operation, int precedence):
             operation_symbol(operation_symbol), operation(operation), precedence(precedence) {};
-    BinaryOperator(const BinaryOperator & other):
-            operation_symbol(other.operation_symbol), operation(other.operation), precedence(other.precedence) {};
+    // BinaryOperator(const BinaryOperator & other) = default;
+    // BinaryOperator & operator=(const BinaryOperator & other) = default;
 };
 
 int random_number(int x, int y);
