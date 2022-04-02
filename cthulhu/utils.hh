@@ -17,7 +17,7 @@ inline std::string to_lower(const std::string_view & data) {
     return result;
 }
 
-inline std::string _join(std::stringstream & ss, const std::string & delimiter) {
+inline std::string _join([[maybe_unused]] std::stringstream & ss, [[maybe_unused]]  const std::string & delimiter) {
     return "";
 }
 

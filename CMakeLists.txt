@@ -3,11 +3,11 @@ project(learning_c__)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(.)
-
 # Configure DPP
 include_directories(DPP/include)
 add_subdirectory(DPP)
+
+include_directories(.)
 
 add_library(tokenizer tokens.cc)
 
@@ -31,3 +31,4 @@ add_executable(bot bot.cpp)
 target_link_libraries(bot calculator commands dpp cthulhu-character_sheet)
 
 add_subdirectory(cthulhu)
+
