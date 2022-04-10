@@ -1,5 +1,3 @@
-include_directories(../DPP/include)
-
 add_library(cthulhu-character_sheet character_sheet.cc)
 target_link_libraries(cthulhu-character_sheet calculator)
 

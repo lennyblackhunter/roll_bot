@@ -34,8 +34,8 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
     std::vector<int> possible_tens_values(tens_dice_number);
     int tens = 0;
     int units = random_number(1, 9);
-    for (int i = 0; i <= tens_dice_number; i++) {
-        possible_tens_values[i] = random_number(1, 9);
+    for (auto & dice : possible_tens_values) {
+        dice = random_number(1, 9);
     }
     if (request.modifier >= 0) {
         tens = *std::min_element(possible_tens_values.begin(), possible_tens_values.end());
