@@ -2,7 +2,7 @@
 #include <atomic>
 #include <sstream>
 #include <dpp/dpp.h>
-#include <fmt/core.h>
+#include <dpp/fmt/core.h>
 
 #include <dpp/nlohmann/json.hpp>
 
