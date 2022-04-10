@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(DPP/include)
 add_subdirectory(DPP)
 
+add_compile_definitions(FMT_HEADER_ONLY)
+
 include_directories(.)
 
 add_library(tokenizer tokens.cc)

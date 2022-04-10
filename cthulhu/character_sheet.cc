@@ -3,7 +3,7 @@
 #include <vector>
 #include <optional>
 #include <stdexcept>
-#include <fmt/core.h>
+#include <dpp/fmt/core.h>
 
 #include "calculator.hh"
 #include "cthulhu/character_sheet.hh"
