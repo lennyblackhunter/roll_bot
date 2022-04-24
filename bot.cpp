@@ -21,16 +21,22 @@ using json = nlohmann::json;
 
 using MsgHandlerT = std::function<void(std::stringstream &, const dpp::message_create_t &, dpp::cluster &)>;
 
+static volatile bool button = true;
+
+void sig_handler(int signal) {
+    button = false;
+};
+
 int main(int argc, char const *argv[]) {
 //    json configdocument;
 //    std::ifstream configfile("config.json");
 //    configfile >> configdocument;
-    volatile bool button = true;
+    std::signal(SIGINT, sig_handler);
+    std::signal(SIGTERM, sig_handler);
     std::atomic<CharacterSheetRepo*> repo(
-            new CharacterSheetRepo("/home/benhauer-adm/Nie_praca/roll_bot/roll_bot/tree/cthulhu/test/repo")
+            new CharacterSheetRepo("/home/leo/Projects/roll_bot/cthulhu/test_repo")
                     );
     repo.load()->load();
-
     using namespace std::placeholders;
     std::map<std::string, MsgHandlerT> command_map {
             {"!roll", [&](std::stringstream & x, const dpp::message_create_t & y, dpp::cluster & z){on_roll(repo, x, y, z);}},
@@ -58,13 +64,12 @@ int main(int argc, char const *argv[]) {
         ss >> command;
         command_map[command](ss, event, bot);
     });
+
     /* Start bot */
     bot.start(true);
     while (button) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     };
-    json j = *repo.load()->get_character_sheet("Annabelle");
-    std::cerr << j << std::endl;
     repo.load()->save();
     return 0;
 };
