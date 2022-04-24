@@ -1,6 +1,7 @@
+#include <vector>
+#include <ranges>
 #include <sstream>
 #include <fstream>
-#include <vector>
 #include <optional>
 #include <stdexcept>
 #include <dpp/fmt/core.h>
@@ -28,25 +29,49 @@ extern const std::map<StatType, std::string> stat_types_map {
 
 CharacterSheet::CharacterSheet(std::string name, StatsT stats): name(std::move(name)), stats(std::move(stats)) {}
 
+bool RollResult::bad() const{
+    return (!error.empty());
+}
+
 RollResult CharacterSheet::roll(const StatRollRequest & request) {
-    Stat & character_stat = stats[request.stat];
-    int tens_dice_number = 1 + std::abs(request.modifier);
-    std::vector<int> possible_tens_values(tens_dice_number);
-    int tens = 0;
-    int units = random_number(1, 9);
-    for (auto & dice : possible_tens_values) {
-        dice = random_number(1, 9);
+    std::string stat_prefix = request.stat;
+    std::vector<std::string> possible_names;
+    for (auto & stat_name : std::views::keys(stats)) {
+        if (stat_name.compare(0, stat_prefix.size(), stat_prefix) == 0) {
+            possible_names.push_back(stat_name);
+        }
     }
-    if (request.modifier >= 0) {
-        tens = *std::min_element(possible_tens_values.begin(), possible_tens_values.end());
+    if (possible_names.size() == 1) {
+        Stat & character_stat = stats[possible_names[0]];
+        int tens_dice_number = 1 + std::abs(request.modifier);
+        std::vector<int> possible_tens_values(tens_dice_number);
+        int tens = 0;
+        int units = random_number(1, 9);
+        for (auto & dice : possible_tens_values) {
+            dice = random_number(1, 9);
+        }
+        if (request.modifier >= 0) {
+            tens = *std::min_element(possible_tens_values.begin(), possible_tens_values.end());
+        }
+        else {
+            tens = *std::max_element(possible_tens_values.begin(), possible_tens_values.end());
+        }
+        int roll_value = tens * 10 + units;
+        character_stat.used = true;
+        //std::cerr << "used in roll: " << character_stat.used << std::endl;
+        return {request.stat, roll_value, character_stat.get(request.hardness)};
+    }
+    else if (possible_names.size() == 0) {
+        return RollResult("there is no statistic with such prefix");
     }
     else {
-        tens = *std::max_element(possible_tens_values.begin(), possible_tens_values.end());
+        std::string same_prefix = "";
+        for (auto pref : possible_names) {
+            same_prefix = same_prefix + ", " + pref;
+        }
+        same_prefix = same_prefix.substr(2);
+        return RollResult(fmt::format("choose statistic: {}", same_prefix));
     }
-    int roll_value = tens * 10 + units;
-    character_stat.used = true;
-    //std::cerr << "used in roll: " << character_stat.used << std::endl;
-    return {request.stat, roll_value, character_stat.get(request.hardness)};
 }
 
 std::string CharacterSheet::get_name() {

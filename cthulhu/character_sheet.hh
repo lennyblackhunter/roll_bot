@@ -56,9 +56,13 @@ struct StatRollRequest {
 
 struct RollResult {
     std::string stat;
+    std::string error;
     int result;
     int target;
+    explicit RollResult(std::string error): error(error) {};
     RollResult(std::string stat, int result, int target): stat(std::move(stat)), result(result), target(target) {}
+
+    bool bad() const;
 };
 
 class CharacterSheet {
