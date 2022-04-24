@@ -1,9 +1,11 @@
+#include <vector>
+#include <ranges>
 #include <sstream>
 #include <fstream>
-#include <vector>
 #include <optional>
 #include <stdexcept>
 #include <dpp/fmt/core.h>
+#include <dpp/fmt/ranges.h>
 
 #include "calculator.hh"
 #include "cthulhu/character_sheet.hh"
@@ -28,8 +30,29 @@ extern const std::map<StatType, std::string> stat_types_map {
 
 CharacterSheet::CharacterSheet(std::string name, StatsT stats): name(std::move(name)), stats(std::move(stats)) {}
 
+bool RollResult::bad() const{
+    return (!error.empty());
+}
+
+RollResult RollResult::bad_roll_result(std::string message) {
+    return RollResult(message);
+}
+
 RollResult CharacterSheet::roll(const StatRollRequest & request) {
-    Stat & character_stat = stats[request.stat];
+    std::string stat_prefix = request.stat;
+    std::vector<std::string> possible_names;
+    for (auto & stat_name : std::views::keys(stats)) {
+        if (stat_name.compare(0, stat_prefix.size(), stat_prefix) == 0) {
+            possible_names.push_back(stat_name);
+        }
+    }
+    if (!possible_names.size()) {
+        return RollResult::bad_roll_result("there is no statistic with such prefix");
+    }
+    else if (possible_names.size() > 1) {
+        return RollResult::bad_roll_result(fmt::format("choose statistic: {}", fmt::join(possible_names, ", ")));
+    }
+    Stat & character_stat = stats[possible_names[0]];
     int tens_dice_number = 1 + std::abs(request.modifier);
     std::vector<int> possible_tens_values(tens_dice_number);
     int tens = 0;
@@ -47,6 +70,7 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
     character_stat.used = true;
     //std::cerr << "used in roll: " << character_stat.used << std::endl;
     return {request.stat, roll_value, character_stat.get(request.hardness)};
+
 }
 
 std::string CharacterSheet::get_name() {
