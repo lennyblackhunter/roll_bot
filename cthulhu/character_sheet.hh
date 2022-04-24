@@ -59,10 +59,13 @@ struct RollResult {
     std::string error;
     int result;
     int target;
-    explicit RollResult(std::string error): error(error) {};
     RollResult(std::string stat, int result, int target): stat(std::move(stat)), result(result), target(target) {}
-
+    private:
+    explicit RollResult(std::string error): error(error) {};
+    
+    public:
     bool bad() const;
+    static RollResult bad_roll_result(std::string message);
 };
 
 class CharacterSheet {
