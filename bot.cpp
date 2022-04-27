@@ -23,19 +23,13 @@ using MsgHandlerT = std::function<void(std::stringstream &, const dpp::message_c
 
 static volatile bool button = true;
 
-void sig_handler(int signal) {
-    button = false;
-};
-
 int main(int argc, char const *argv[]) {
-//    json configdocument;
-//    std::ifstream configfile("config.json");
-//    configfile >> configdocument;
-    std::signal(SIGINT, sig_handler);
-    std::signal(SIGTERM, sig_handler);
+    json configdocument = get_config();
+
     std::atomic<CharacterSheetRepo*> repo(
-            new CharacterSheetRepo("/home/leo/Projects/roll_bot/cthulhu/test_repo")
+            new CharacterSheetRepo(configdocument["path_to_repo"])
                     );
+                    
     repo.load()->load();
     using namespace std::placeholders;
     std::map<std::string, MsgHandlerT> command_map {
@@ -46,7 +40,7 @@ int main(int argc, char const *argv[]) {
     };
 
     /* Setup the bot */
-    dpp::cluster bot("OTMzNDYwMjU0NDgwNTMxNTU2.Yeh2mw.L6V0IDIei7r7HvdGulB_mx3rtu4");
+    dpp::cluster bot(configdocument["token"]);
 
     /* Log event */
     bot.on_log([&bot](const dpp::log_t &event) {
