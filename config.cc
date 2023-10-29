@@ -1,6 +1,8 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include <iostream>
+
 #include <dpp/nlohmann/json.hpp>
 
 using nlohmann::json;
