@@ -9,6 +9,7 @@
  * validate character name and replace spaces with '_'
  * validate dice expression
  */
+
 std::optional<StatChangeRequest> stat_change_from_string(std::stringstream & ss) {
     std::string character_name;
     std::string stat;

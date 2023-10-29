@@ -4,8 +4,7 @@
 #include <fstream>
 #include <optional>
 #include <stdexcept>
-#include <dpp/fmt/core.h>
-#include <dpp/fmt/ranges.h>
+#include <format>
 
 #include "calculator.hh"
 #include "cthulhu/character_sheet.hh"
@@ -50,7 +49,12 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
         return RollResult::bad_roll_result("there is no statistic with such prefix");
     }
     else if (possible_names.size() > 1) {
-        return RollResult::bad_roll_result(fmt::format("choose statistic: {}", fmt::join(possible_names, ", ")));
+        std::string stats = possible_names[0];
+        for (int i = 1; i < possible_names.size(); i++) {
+            stats += ", " + possible_names[i];
+        }
+        return RollResult::bad_roll_result(std::format(
+            "choose among statistic: {}", stats));
     }
     Stat & character_stat = stats[possible_names[0]];
     int tens_dice_number = 1 + std::abs(request.modifier);
@@ -111,7 +115,7 @@ std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_s
 
 CharacterSheetRepo::CharacterSheetRepo(std::string folder): data_folder(std::move(folder)) {
     if (not fs::is_directory(data_folder)) {
-        throw RepoError(fmt::format("{} should be a path to an existing directory!", data_folder.string())); 
+        throw RepoError(std::format("{} should be a path to an existing directory!", data_folder.string())); 
     }
 }
 

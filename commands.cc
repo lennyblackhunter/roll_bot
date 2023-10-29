@@ -2,7 +2,7 @@
 #include <atomic>
 #include <sstream>
 #include <dpp/dpp.h>
-#include <dpp/fmt/core.h>
+#include <format>
 
 #include <dpp/nlohmann/json.hpp>
 
@@ -40,7 +40,7 @@ void on_set_stat(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss
         new_value = old_value - roll_value;
     }
     character_sheet->set_stat(request.stat, new_value);
-    answer = fmt::format("you rolled {} - {}'s {} was changed from {} to {}",
+    answer = std::format("you rolled {} - {}'s {} was changed from {} to {}",
                          roll_value, request.character_name, request.stat, old_value, new_value);
     std::cerr << "answer: " << answer << std::endl;
     bot.message_create(dpp::message(event.msg.channel_id, answer));
@@ -48,13 +48,15 @@ void on_set_stat(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss
 
 
 std::string test_result(const dpp::message_create_t & event, const RollResult & result) {
-    std::string answer;
-    answer = fmt::format("{} tested {} ({}) and got {} - test passed OwO",
-                         event.msg.member.get_mention(), result.stat, result.target, result.result);
-    if (result.result > result.target) {
-        int diff = result.result - result.target;
-        answer = fmt::format("{} tested {} ({}) and got {} - test failed, you need to use {} luck points",
-                             event.msg.member.get_mention(), result.stat, result.target, result.result, diff);
+    std::string answer = result.error;
+    if (!result.bad()) {
+        answer = std::format("{} tested {} ({}) and got {} - test passed OwO",
+                            event.msg.member.get_mention(), result.stat, result.target, result.result);
+        if (result.result > result.target) {
+            int diff = result.result - result.target;
+            answer = std::format("{} tested {} ({}) and got {} - test failed, you need to use {} luck points",
+                                event.msg.member.get_mention(), result.stat, result.target, result.result, diff);
+        }
     }
     return answer;
 }
@@ -67,17 +69,12 @@ void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, co
         auto character_sheet = repo.load()->get_character_sheet(character_name);
         answer = "no such character";
         if (character_sheet)  {
-            answer = "no such stat";
-            if (character_sheet->stats.count(request->stat)) {
-                json j = *character_sheet;
-                std::cerr << j << std::endl;
-                RollResult result = character_sheet->roll(*request);
-                json l = *character_sheet;
-                std::cerr << l << std::endl;
-                answer = test_result(event, result);
-            }
+            answer = "no such statistic";
+            RollResult result = character_sheet->roll(*request);
+            answer = test_result(event, result);
         }
     }
+    std::cerr << "answer: " << answer << std::endl;
     bot.message_create(dpp::message(event.msg.channel_id, answer));
 }
 

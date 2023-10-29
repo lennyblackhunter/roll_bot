@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(learning_c__)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 # Configure DPP
 include_directories(DPP/include)
@@ -14,6 +14,8 @@ include_directories(.)
 add_library(tokenizer tokens.cc)
 
 add_library(RPN rpn.cc)
+
+add_library(config config.cc)
 
 add_executable(tokens_test tokens_test.cpp)
 
@@ -30,7 +32,7 @@ add_library(commands commands.cc)
 target_link_libraries(commands cthulhu-user_input cthulhu-character_sheet)
 
 add_executable(bot bot.cpp)
-target_link_libraries(bot calculator commands dpp cthulhu-character_sheet)
+target_link_libraries(bot calculator commands dpp cthulhu-character_sheet config)
 
 add_subdirectory(cthulhu)
 
