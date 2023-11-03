@@ -1,4 +1,5 @@
 build/
 cmake-build-debug/
-cthulhu/test/
+cthulhu/test_repo/
 .vscode/
+config.json
