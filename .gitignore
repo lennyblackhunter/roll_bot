@@ -2,3 +2,4 @@ build/
 cmake-build-debug/
 cthulhu/test/
 .vscode/
+config.json
