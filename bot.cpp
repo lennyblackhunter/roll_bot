@@ -1,20 +1,14 @@
-#include <chrono>
 #include <thread>
 #include <atomic>
-#include <memory>
-#include <iomanip>
 #include <sstream>
-#include <cstdlib>
 #include <functional>
 
 #include <dpp/dpp.h>
 #include <dpp/nlohmann/json.hpp>
 
-#include "bot.h"
 #include "config.hh"
 #include "commands.hh"
 #include "calculator.hh"
-#include "cthulhu/user_input.hh"
 #include "cthulhu/character_sheet.hh"
 
 using json = nlohmann::json;
@@ -23,7 +17,7 @@ using MsgHandlerT = std::function<void(std::stringstream &, const dpp::message_c
 
 static volatile bool button = true;
 
-void sig_handler(int signal) {
+void sig_handler(int) {
     button = false;
 };
 
@@ -46,7 +40,7 @@ int main(int argc, char const *argv[]) {
             {"!goodbye", std::bind(on_turn_off, &button, _1, _2, _3)},
     };
 
-    /* Setup the bot */
+    /* Set up the bot */
     dpp::cluster bot(configdocument["token"], dpp::i_default_intents | dpp::i_message_content);
 
     /* Log event */
@@ -74,19 +68,3 @@ int main(int argc, char const *argv[]) {
     repo.load()->save();
     return 0;
 };
-
-//void configure_bot(dpp::cluster & bot, const json & config, CharacterSheetRepo & repo);
-
-//CharacterSheetRepo get_repository(const json & config) {
-//    return CharacterSheetRepo(config["repository_dir"]);
-//}
-//
-//int main(int argc, char const *argv[]) {
-//    json config = get_config();
-//    dpp::cluster bot(get_secret_key(config));
-//    CharacterSheetRepo repo = get_repository(config);
-//    //configure_bot(bot, config, repo);
-//    bot.start(false);
-//    // Tu się zwiesi główny wątek w oczekiwaniu na polecenie zamknięcia programu i posprzątania po sobie
-//    return 0;
-//}

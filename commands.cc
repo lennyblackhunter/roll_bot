@@ -69,7 +69,6 @@ void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, co
         auto character_sheet = repo.load()->get_character_sheet(character_name);
         answer = "no such character";
         if (character_sheet)  {
-            answer = "no such statistic";
             RollResult result = character_sheet->roll(*request);
             answer = test_result(event, result);
         }
@@ -87,7 +86,8 @@ void on_sheet_request(std::atomic<CharacterSheetRepo*> & repo, std::stringstream
     }
     auto character_sheet = repo.load()->get_character_sheet(character_name);
     if (!character_sheet) {
-        std::cerr << "Could not found character sheet of '" << character_name << "'\n";
+        std::cerr << "Could not find character sheet of '" << character_name << "'\n";
+        return;
     }
     bot.message_create(dpp::message(event.msg.channel_id, to_string(*character_sheet)));
 }

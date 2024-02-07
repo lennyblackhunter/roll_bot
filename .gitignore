@@ -3,3 +3,4 @@ cmake-build-debug/
 cthulhu/test_repo/
 .vscode/
 config.json
+.idea/
