@@ -139,22 +139,36 @@ void CharacterSheetRepo::load() {
     }
 }
 
-void CharacterSheetRepo::save() {
-    for (const auto & [name, character_sheet] : character_sheets) {
-        json j = character_sheet;
-        auto path_to_save = data_folder / name;
-        path_to_save += ".json";
-        std::cerr << "path: " << path_to_save << std::endl;
-        std::fstream file(path_to_save, file.out);
-        file << j;
-    }
+void BaseCharacterSheetRepo::save() {
+  for (auto id : ids()) {
+    save(id);
+  }
 }
 
-CharacterSheet* CharacterSheetRepo::get_character_sheet(const std::string & s) {
-    if (character_sheets.count(s)) {
-        return &character_sheets[s];
+void CharacterSheetRepo::save(std::string_view id) {
+    auto character_sheet = get(id);
+    if (!character_sheet) {
+      throw std::runtime_error(std::format("Could not find character sheet with id={}", id));
+    }
+    json j = *character_sheet;
+    auto path_to_save = data_folder / id;
+    path_to_save += ".json";
+    std::cerr << "path: " << path_to_save << std::endl;
+    std::fstream file(path_to_save, file.out);
+    file << j;
+}
+
+CharacterSheet* CharacterSheetRepo::get(std::string_view s) {
+    auto sheet_it = character_sheets.find(s);
+    if (sheet_it != character_sheets.end()) {
+      return &sheet_it->second;
     }
     return nullptr;
+}
+
+std::vector<std::string_view> CharacterSheetRepo::ids() {
+  auto keys = std::views::keys(character_sheets);
+  return {keys.begin(), keys.end()};
 }
 
 template<>

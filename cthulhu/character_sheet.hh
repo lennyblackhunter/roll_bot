@@ -77,10 +77,10 @@ public:
     CharacterSheet() = default;
     CharacterSheet(std::string name, StatsT stats);
 
-    RollResult roll(const StatRollRequest & r);
+    virtual RollResult roll(const StatRollRequest & r);
     std::string get_name();
     int get_stat_value(const std::string & stat_name);
-    void set_stat(const std::string & stat_name, int new_value);
+    virtual void set_stat(const std::string & stat_name, int new_value);
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(CharacterSheet, name, stats);
 
@@ -92,17 +92,59 @@ struct RepoError : public std::invalid_argument {
     using std::invalid_argument::invalid_argument;
 };
 
-class CharacterSheetRepo {
+
+
+class BaseCharacterSheetRepo {
+ public:
+  virtual CharacterSheet* get(std::string_view id) = 0;
+  virtual std::vector<std::string_view> ids() = 0;
+  virtual void load() = 0;
+  void save();
+  virtual void save(std::string_view id) = 0;
+};
+
+
+class CharacterSheetRepo: public BaseCharacterSheetRepo {
     //fs::path data_folder;
-    std::map<std::string, CharacterSheet> character_sheets;
+    std::map<std::string, CharacterSheet, std::less<>> character_sheets;
 public:
     fs::path data_folder;
     explicit CharacterSheetRepo(std::string folder);
 
-    CharacterSheet* get_character_sheet(const std::string & s);
+    CharacterSheet* get(std::string_view id) override;
     void add(CharacterSheet character_sheet);
-    void load();
-    void save();
+    std::vector<std::string_view> ids() override;
+    void load() override;
+    using BaseCharacterSheetRepo::save;
+    void save(std::string_view id) override;
 };
 
+class AutoSaveCSWrapper: CharacterSheet {
+  CharacterSheet* _wrapped;
+  BaseCharacterSheetRepo& _repo;
+ public:
+  AutoSaveCSWrapper(CharacterSheet* wrapped, BaseCharacterSheetRepo& repo): _wrapped(wrapped), _repo(repo) {};
+  RollResult roll(const StatRollRequest & r) override {
+    auto result = _wrapped->roll(r);
+    _repo.save();  // TODO: save just one
+    return result;
+  }
+  void set_stat(const std::string & stat_name, int new_value) override {
+    _wrapped->set_stat(stat_name, new_value);
+    _repo.save();
+  }
+};
 
+class AutoSaveCSRepoWrapper: public BaseCharacterSheetRepo {
+  BaseCharacterSheetRepo * _wrapped;
+ public:
+  explicit AutoSaveCSRepoWrapper(BaseCharacterSheetRepo * wrapped): _wrapped(wrapped) {};
+  CharacterSheet* get(std::string_view id) override {
+    return _wrapped->get(id);
+  };
+  void add(CharacterSheet character_sheet);
+  std::vector<std::string_view> ids() override;
+  void load() override;
+  using BaseCharacterSheetRepo::save;
+  void save(std::string_view id) override;
+};

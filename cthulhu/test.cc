@@ -43,7 +43,7 @@ int main() {
     std::cout << "miau?" << std::endl;
     repo.load();
     std::cout << "miau" << std::endl;
-    std::cout << repo.get_character_sheet("Stefan")->get_name() << std::endl;
+    std::cout << repo.get("Stefan")->get_name() << std::endl;
     std::cout << "miau!" << std::endl;
     repo.add(example_sheet);
     std::cout << "miau!!" << std::endl;

@@ -10,7 +10,7 @@
 #include "cthulhu/character_sheet.hh"
 #include "calculator.hh"
 
-void on_set_stat(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+void on_set_stat(BaseCharacterSheetRepo* repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
     std::string answer;
     auto probably_request = stat_change_from_string(ss);
     if (!probably_request) {
@@ -21,7 +21,7 @@ void on_set_stat(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss
     BinaryOperator<int> subtraction('-', [](int x, int y){return x - y;}, 1);
     BinaryOperator<int> dice_roll('k', [](int x, int y){return roll_and_add(x, y);}, 3);
     NodeBuilder<int> nodes({addition, subtraction, dice_roll});
-    auto character_sheet = repo.load()->get_character_sheet(request.character_name);
+    auto character_sheet = repo->get(request.character_name);
     auto node = nodes.string_to_node(request.dice_expression);
     if (!node) {
         std::cerr << "'" << request.dice_expression << "' is not a valid dice expression.";
@@ -61,12 +61,12 @@ std::string test_result(const dpp::message_create_t & event, const RollResult & 
     return answer;
 }
 
-void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+void on_roll(BaseCharacterSheetRepo* repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
     std::string answer = "i don't understand :<";
     auto request = request_from_string(ss);
     if (request) {
         std::string character_name = event.msg.member.nickname;
-        auto character_sheet = repo.load()->get_character_sheet(character_name);
+        auto character_sheet = repo->get(character_name);
         answer = "no such character";
         if (character_sheet)  {
             RollResult result = character_sheet->roll(*request);
@@ -77,14 +77,14 @@ void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, co
     bot.message_create(dpp::message(event.msg.channel_id, answer));
 }
 
-void on_sheet_request(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
+void on_sheet_request(BaseCharacterSheetRepo* repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot) {
     std::string character_name;
     getline(ss, character_name);
     ltrim(character_name);
     if (!ss) {
         character_name = event.msg.member.nickname;
     }
-    auto character_sheet = repo.load()->get_character_sheet(character_name);
+    auto character_sheet = repo->get(character_name);
     if (!character_sheet) {
         std::cerr << "Could not find character sheet of '" << character_name << "'\n";
         return;
