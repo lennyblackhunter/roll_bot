@@ -6,7 +6,7 @@ pkgs.stdenv.mkDerivation {
 
   src = ./.; # your project dir
 
-  nativeBuildInputs = [ pkgs.git pkgs.cmake pkgs.pkg-config ];
+  nativeBuildInputs = [ pkgs.git pkgs.cmake pkgs.pkg-config pkgs.bazel_7];
   buildInputs = [ pkgs.zlib pkgs.openssl ];
 
   # optional, if tests are run with ctest
