@@ -67,7 +67,7 @@ int main(int argc, char const *argv[]) {
     });
 
     /* Start bot */
-    bot.start(true);
+    bot.start(dpp::start_type::st_return);
     while (button) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     };

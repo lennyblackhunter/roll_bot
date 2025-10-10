@@ -65,7 +65,7 @@ void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, co
     std::string answer = "i don't understand :<";
     auto request = request_from_string(ss);
     if (request) {
-        std::string character_name = event.msg.member.nickname;
+        std::string character_name = event.msg.member.get_nickname();
         std::cerr << "Roll request from player " << character_name << std::endl;
         auto character_sheet = repo.load()->get_character_sheet(character_name);
         answer = "no such character";
@@ -84,7 +84,7 @@ void on_sheet_request(std::atomic<CharacterSheetRepo*> & repo, std::stringstream
     getline(ss, character_name);
     ltrim(character_name);
     if (!ss) {
-        character_name = event.msg.member.nickname;
+        character_name = event.msg.member.get_nickname();
     }
     auto character_sheet = repo.load()->get_character_sheet(character_name);
     if (!character_sheet) {
