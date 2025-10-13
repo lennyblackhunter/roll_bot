@@ -3,3 +3,7 @@ cmake-build-debug/
 cthulhu/test_repo/
 .vscode/
 config.json
+
+# Bazel
+bazel-*
+MODULE*

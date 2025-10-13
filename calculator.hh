@@ -11,7 +11,7 @@
 
 #include "tokens.hh"
 #include "rpn.hh"
-#include "cthulhu/utils.hh"
+#include "utils.hh"
 
 template <typename T>
 struct BinaryOperator {

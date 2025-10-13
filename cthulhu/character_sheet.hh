@@ -5,7 +5,7 @@
 #include <optional>
 #include <filesystem>
 
-#include "cthulhu/utils.hh"
+#include "utils.hh"
 
 #include <dpp/nlohmann/json.hpp>
 
