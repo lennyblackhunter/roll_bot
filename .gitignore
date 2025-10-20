@@ -6,4 +6,4 @@ config.json
 
 # Bazel
 bazel-*
-MODULE*
+MODULE.bazel.lock

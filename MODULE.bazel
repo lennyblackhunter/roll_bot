@@ -1,0 +1,13 @@
+module(
+  name = "roll_bot",
+  version = "0.1.0",
+)
+
+bazel_dep(name = "dpp", version = "3.3.1.bcr.7")
+
+git_override(
+  module_name = "dpp",
+  remote = "git@github.com:JanczarKurek/DPP.git",
+  branch = "jknurek/bazel",
+)
+
