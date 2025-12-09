@@ -1,16 +1,24 @@
 #pragma once
 
-#include <atomic>
+#include <mutex>
 #include <sstream>
-#include <dpp/dpp.h>
 
 #include "cthulhu/character_sheet.hh"
 
 
-void on_set_stat(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot);
+struct CthulhuBotCommand {
+  CharacterSheetRepo & repo;
+  std::mutex & repo_mutex;
+  CthulhuBotCommand(CharacterSheetRepo & repo, std::mutex & repo_mutex);
+};
 
-void on_roll(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t &event, dpp::cluster &bot);
+#define command_handler(name) struct name: CthulhuBotCommand { \
+  using CthulhuBotCommand::CthulhuBotCommand; \
+  bool operator()(std::istringstream &, const User &, BotOutputProtocol &); \
+};
 
-void on_sheet_request(std::atomic<CharacterSheetRepo*> & repo, std::stringstream & ss, const dpp::message_create_t & event, dpp::cluster & bot);
 
-void on_turn_off(volatile bool* button, std::stringstream & ss, const dpp::message_create_t &event, dpp::cluster &bot);
+command_handler(SetStat);
+command_handler(Roll);
+command_handler(SheetRequest);
+

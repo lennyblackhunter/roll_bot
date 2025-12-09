@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "core/bot_io.hh"
+#include "commands.hh"
+#include "config.hh"
 
 
 class StreamBotOutput : public BotOutputProtocol {
@@ -34,10 +36,15 @@ class LocalUser: public User {
 
 class ConsoleBot : public Bot {
   StreamBotOutput _out{&std::cout};
-  std::set<std::string> _users{"Kris", "Susie", "Ralsei"};
-  LocalUser _current_user{"Kris"};
+  std::set<std::string> _users;
+
+  LocalUser _current_user;
   bool _shutdown = false;
  public:
+  ConsoleBot(const std::set<std::string> & users): _users(users), _current_user{*users.begin()} {
+    
+  };
+
   StreamBotOutput & get_output() {
     return _out;
   }
@@ -116,15 +123,29 @@ class ConsoleBot : public Bot {
 };
 
 int main() {
-  ConsoleBot bot;
+  json configdocument = get_config();
+  CharacterSheetRepo repo(configdocument["path_to_repo"]);
+  repo.load();
+  std::mutex repo_mutex;
+  
+  ConsoleBot bot(repo.players());
   bot.add_magic_commands();
+
   bot.register_handler(
-      "!hello",
-      "Say hello to the current user.",
-      [&bot](std::istringstream & ss, const User & user, BotOutputProtocol & out){
-    out.write_message(std::format("Hello {}", bot.get_current_user().get_nickname()));
-    bot.run();
-    return true;
-  });
+      "!stat",
+      "!stat [name] [stat] [dice_expr]: Sets given stat using dice_expr.",
+      SetStat(repo, repo_mutex)
+  );
+  bot.register_handler(
+      "!roll",
+      "!roll [stat_prefix] [dice_expr]: Rolls for a given stat applying modifiers.", // TODO: Explain modifiers
+      Roll(repo, repo_mutex)
+  );
+  bot.register_handler(
+      "!sheet",
+      "Prints current player's sheet.",
+      SheetRequest(repo, repo_mutex)
+  );
   bot.run();
 }
+

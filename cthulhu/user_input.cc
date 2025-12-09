@@ -10,7 +10,7 @@
  * validate dice expression
  */
 
-std::optional<StatChangeRequest> stat_change_from_string(std::stringstream & ss) {
+std::optional<StatChangeRequest> stat_change_from_string(std::istringstream & ss) {
     std::string character_name;
     std::string stat;
     ChangeType type;
