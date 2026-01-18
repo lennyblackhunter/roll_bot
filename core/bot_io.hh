@@ -44,7 +44,7 @@ class Bot {
       get_output().write_message(std::format("Command {} not found.", command));
       return BotStatus::COMMAND_NOT_FOUND;
     }
-    if (handler->second.handler(ss, user, get_output())) {
+    if (!handler->second.handler(ss, user, get_output())) {
       return BotStatus::FAILED;
     }
     return BotStatus::OK;
@@ -62,5 +62,4 @@ class Bot {
  protected:
   std::map<std::string, CommandHandler> _handlers;
 };
-
 

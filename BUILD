@@ -32,6 +32,18 @@ cc_library(
     "//cthulhu:user_input",
     "//cthulhu:character_sheet",
     ":calculator",
+    "//core:bot_io",
+  ],
+)
+
+cc_library(
+  name = "discord_commands",
+  srcs = ["discord_commands.cc"],
+  hdrs = ["discord_commands.hh"],
+  deps = [
+    "//cthulhu:user_input",
+    "//cthulhu:character_sheet",
+    ":calculator",
     "@dpp//:dpp",
   ],
 )
@@ -57,7 +69,7 @@ cc_binary(
   srcs = ["bot.cpp", "bot.h"],
   deps = [
     ":config",
-    ":commands",
+    ":discord_commands",
     ":calculator",
     "//cthulhu:user_input",
     "//cthulhu:character_sheet",

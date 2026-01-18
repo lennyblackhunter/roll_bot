@@ -121,10 +121,12 @@ CharacterSheetRepo::CharacterSheetRepo(std::string folder): data_folder(std::mov
 
 void CharacterSheetRepo::add(CharacterSheet character_sheet) {
     character_sheets[character_sheet.get_name()] = character_sheet;
+    _players.insert(character_sheet.get_name());
 }
 
 void CharacterSheetRepo::load() {
     for (const auto & entry : fs::recursive_directory_iterator(data_folder)) {
+      std::cerr << "Loading from " << entry << std::endl;
         if (entry.path().extension() != ".json") 
             continue;
 
@@ -135,7 +137,7 @@ void CharacterSheetRepo::load() {
         CharacterSheet character_sheet;
         file >> j;
         character_sheet = j;
-        character_sheets[character_sheet.get_name()] = character_sheet;
+        add(character_sheet);
     }
 }
 
@@ -155,6 +157,10 @@ CharacterSheet* CharacterSheetRepo::get_character_sheet(const std::string & s) {
         return &character_sheets[s];
     }
     return nullptr;
+}
+
+const std::set<std::string> & CharacterSheetRepo::players() const {
+  return _players;
 }
 
 template<>

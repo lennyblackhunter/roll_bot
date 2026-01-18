@@ -10,15 +10,21 @@
  * validate dice expression
  */
 
-std::optional<StatChangeRequest> stat_change_from_string(std::stringstream & ss) {
+std::optional<StatChangeRequest> stat_change_from_string(std::istream & ss) {
     std::string character_name;
     std::string stat;
     ChangeType type;
     std::string s;
     ss >> character_name;
     ss >> stat;
+    if (!ss) {
+        return std::nullopt;
+    }
     getline(ss, s);
     ltrim(s);
+    if (s.empty()) {
+        return std::nullopt;
+    }
     if (s[0] == '+') {
         type = ChangeType::HIGHER;
     }

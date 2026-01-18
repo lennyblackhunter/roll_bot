@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <set>
 #include <map>
 #include <optional>
 #include <filesystem>
@@ -95,6 +96,7 @@ struct RepoError : public std::invalid_argument {
 class CharacterSheetRepo {
     //fs::path data_folder;
     std::map<std::string, CharacterSheet> character_sheets;
+    std::set<std::string> _players;
 public:
     fs::path data_folder;
     explicit CharacterSheetRepo(std::string folder);
@@ -103,6 +105,7 @@ public:
     void add(CharacterSheet character_sheet);
     void load();
     void save();
+    const std::set<std::string> & players() const;
 };
 
 

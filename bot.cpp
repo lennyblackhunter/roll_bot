@@ -12,7 +12,7 @@
 
 #include "bot.h"
 #include "config.hh"
-#include "commands.hh"
+#include "discord_commands.hh"
 #include "calculator.hh"
 #include "cthulhu/user_input.hh"
 #include "cthulhu/character_sheet.hh"

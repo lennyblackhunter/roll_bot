@@ -16,12 +16,12 @@ inline std::string to_lower(const std::string_view & data) {
     return result;
 }
 
-inline std::string _join([[maybe_unused]] std::stringstream & ss, [[maybe_unused]]  const std::string & delimiter) {
+inline std::string _join([[maybe_unused]] std::ostringstream & ss, [[maybe_unused]]  const std::string & delimiter) {
     return "";
 }
 
 template <typename Arg, typename... Args>
-std::string _join(std::stringstream & ss, const std::string & delimiter, const Arg & arg, const Args & ... args) {
+std::string _join(std::ostringstream & ss, const std::string & delimiter, const Arg & arg, const Args & ... args) {
     if constexpr (sizeof...(args) > 0) {
         ss << arg << delimiter;
         return _join(ss, delimiter, args...);
@@ -33,7 +33,7 @@ std::string _join(std::stringstream & ss, const std::string & delimiter, const A
 
 template <typename... Args>
 std::string join(const std::string & delimiter, const Args & ... args) {
-    std::stringstream ss;
+    std::ostringstream ss;
     return _join(ss, delimiter, args...);
 }
 
