@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "core/bot_io.hh"
-#include "commands.hh"
+#include "bot_setup.hh"
 #include "config.hh"
 
 
@@ -48,16 +48,12 @@ class ConsoleBot : public Bot {
     
   };
 
-  StreamBotOutput & get_output() {
-    return _out;
-  }
-
   void run() {
     std::string line;
     while (std::cin && !_shutdown) {
       std::cout << "[" << _current_user.get_nickname() << "]: ";
       std::getline(std::cin, line);
-      handle_msg(line, _current_user);
+      handle_msg(line, _current_user, _out);
     }
     return;
   }
@@ -134,20 +130,6 @@ int main() {
   ConsoleBot bot(repo.players());
   bot.add_magic_commands();
 
-  bot.register_handler(
-      "!stat",
-      "!stat [name] [stat] [dice_expr]: Sets given stat using dice_expr.",
-      SetStat(repo, repo_mutex)
-  );
-  bot.register_handler(
-      "!roll",
-      "!roll [stat_prefix] [dice_expr]: Rolls for a given stat applying modifiers.", // TODO: Explain modifiers
-      Roll(repo, repo_mutex)
-  );
-  bot.register_handler(
-      "!sheet",
-      "Prints current player's sheet.",
-      SheetRequest(repo, repo_mutex)
-  );
+  apply_cthulhu_handlers(bot, repo, repo_mutex);
   bot.run();
 }

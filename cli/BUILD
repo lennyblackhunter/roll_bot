@@ -5,8 +5,7 @@ cc_binary(
   srcs = ["cli.cc"],
   deps = [
     "//core:bot_io",
-    "//:commands",
+    "//:bot_setup",
     "//:config",
   ],
 )
-

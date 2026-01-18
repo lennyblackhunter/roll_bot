@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "cthulhu/character_sheet.hh"
+#include "core/bot_io.hh"
 
 
 struct CthulhuBotCommand {
@@ -21,4 +22,3 @@ struct CthulhuBotCommand {
 command_handler(SetStat);
 command_handler(Roll);
 command_handler(SheetRequest);
-

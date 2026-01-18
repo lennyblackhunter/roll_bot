@@ -35,16 +35,16 @@ struct CommandHandler {
 class Bot {
  public:
 
-  BotStatus handle_msg(std::string_view msg, const User & user) { 
+  BotStatus handle_msg(std::string_view msg, const User & user, BotOutputProtocol & out) { 
     std::istringstream ss{std::string(msg)};
     std::string command;
     ss >> command;
     auto handler = _handlers.find(command);
     if (handler == _handlers.end()) {
-      get_output().write_message(std::format("Command {} not found.", command));
+      out.write_message(std::format("Command {} not found.", command));
       return BotStatus::COMMAND_NOT_FOUND;
     }
-    if (!handler->second.handler(ss, user, get_output())) {
+    if (!handler->second.handler(ss, user, out)) {
       return BotStatus::FAILED;
     }
     return BotStatus::OK;
@@ -57,9 +57,7 @@ class Bot {
     }; //TODO: Better insert plz.
   }
 
-  virtual BotOutputProtocol & get_output() = 0;
   virtual ~Bot() = default;
  protected:
   std::map<std::string, CommandHandler> _handlers;
 };
-

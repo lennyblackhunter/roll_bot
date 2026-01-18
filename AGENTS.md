@@ -6,6 +6,7 @@ This repository is a C++ codebase built with Bazel.
 - Follow existing style and naming conventions in nearby files.
 - Add or update tests when changing behavior.
 - Use `rg` for searching the codebase.
+- When adding source files, create or update Bazel targets near those files (add BUILD files as needed).
 
 ## About project
 
