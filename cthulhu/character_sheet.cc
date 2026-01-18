@@ -90,26 +90,54 @@ int CharacterSheet::get_stat_value(const std::string & stat_name) {
 }
 
 std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_sheet) {
-    out << character_sheet.name;
+    auto print_group = [&](const std::string & title,
+                           auto predicate,
+                           std::size_t columns) {
+        std::vector<std::pair<std::string, int>> items;
+        std::size_t name_width = 0;
+        for (const auto & [stat_name, stat] : character_sheet.stats) {
+            if (predicate(stat)) {
+                items.emplace_back(stat_name, stat.value);
+                name_width = std::max(name_width, stat_name.size());
+            }
+        }
+        if (items.empty()) {
+            return;
+        }
+        out << title << "\n";
+        std::size_t col = 0;
+        for (const auto & [stat_name, value] : items) {
+            out << std::format("{:<{}} {:>3}", stat_name, name_width, value);
+            col++;
+            if (col == columns) {
+                out << "\n";
+                col = 0;
+            } else {
+                out << "  ";
+            }
+        }
+        if (col != 0) {
+            out << "\n";
+        }
+    };
+
+    out << "```text\n";
+    out << character_sheet.name << "\n";
+    out << "Resources: ";
+    bool first = true;
     for (const auto & [stat_name, stat] : character_sheet.stats) {
         if (stat.stat_type == StatType::IDK || stat.stat_type == StatType::RESOURCE) {
-            out << "\t\t" << stat_name << ": " << stat.value;
-        }
-    }
-    out << "\n\n";
-    out << "Attributes:\n";
-    for (const auto & [stat_name, stat] : character_sheet.stats) {
-        if (stat.stat_type == StatType::ATTRIBUTE) {
-            out << stat_name << ": " << stat.value << "\n";
+            if (!first) {
+                out << " | ";
+            }
+            out << stat_name << " " << stat.value;
+            first = false;
         }
     }
     out << "\n";
-    out << "Abilities:\n";
-    for (const auto & [stat_name, stat] : character_sheet.stats) {
-        if (stat.stat_type == StatType::ABILITY) {
-            out << stat_name << ": " << stat.value << "\n";
-        }
-    }
+    print_group("Attributes:", [](const Stat & s){ return s.stat_type == StatType::ATTRIBUTE; }, 2);
+    print_group("Abilities:", [](const Stat & s){ return s.stat_type == StatType::ABILITY; }, 3);
+    out << "```\n";
     return out;
 }
 
