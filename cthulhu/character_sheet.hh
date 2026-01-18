@@ -4,6 +4,7 @@
 #include <set>
 #include <map>
 #include <optional>
+#include <vector>
 #include <filesystem>
 
 #include "utils.hh"
@@ -82,6 +83,7 @@ public:
     std::string get_name();
     int get_stat_value(const std::string & stat_name);
     void set_stat(const std::string & stat_name, int new_value);
+    std::vector<std::string> matching_stats(const std::string & prefix) const;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(CharacterSheet, name, stats);
 
@@ -107,5 +109,4 @@ public:
     void save();
     const std::set<std::string> & players() const;
 };
-
 

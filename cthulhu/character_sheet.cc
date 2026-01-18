@@ -38,13 +38,7 @@ RollResult RollResult::bad_roll_result(std::string message) {
 }
 
 RollResult CharacterSheet::roll(const StatRollRequest & request) {
-    std::string stat_prefix = request.stat;
-    std::vector<std::string> possible_names;
-    for (auto & stat_name : std::views::keys(stats)) {
-        if (stat_name.compare(0, stat_prefix.size(), stat_prefix) == 0) {
-            possible_names.push_back(stat_name);
-        }
-    }
+    std::vector<std::string> possible_names = matching_stats(request.stat);
     if (!possible_names.size()) {
         return RollResult::bad_roll_result("there is no statistic with such prefix");
     }
@@ -77,16 +71,34 @@ RollResult CharacterSheet::roll(const StatRollRequest & request) {
 
 }
 
+std::vector<std::string> CharacterSheet::matching_stats(const std::string & prefix) const {
+    std::vector<std::string> matches;
+    for (const auto & stat_name : std::views::keys(stats)) {
+        if (stat_name.compare(0, prefix.size(), prefix) == 0) {
+            matches.push_back(stat_name);
+        }
+    }
+    return matches;
+}
+
 std::string CharacterSheet::get_name() {
     return name;
 }
 
 void CharacterSheet::set_stat(const std::string & stat_name, int new_value) {
-    stats[stat_name].value = new_value;
+    auto it = stats.find(stat_name);
+    if (it == stats.end()) {
+        return;
+    }
+    it->second.value = new_value;
 }
 
 int CharacterSheet::get_stat_value(const std::string & stat_name) {
-    return stats[stat_name].value;
+    auto it = stats.find(stat_name);
+    if (it == stats.end()) {
+        return 0;
+    }
+    return it->second.value;
 }
 
 std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_sheet) {

@@ -16,6 +16,17 @@ CthulhuBotCommand::CthulhuBotCommand(
 
 
 
+static std::string join_matches(const std::vector<std::string> & matches) {
+  if (matches.empty()) {
+    return "";
+  }
+  std::string result = matches.front();
+  for (std::size_t i = 1; i < matches.size(); ++i) {
+    result += ", " + matches[i];
+  }
+  return result;
+}
+
 bool SetStat::operator()(std::istringstream & in, const User & user, BotOutputProtocol & out) {
   std::string answer;
   auto probably_request = stat_change_from_string(in);
@@ -29,6 +40,20 @@ bool SetStat::operator()(std::istringstream & in, const User & user, BotOutputPr
   NodeBuilder<int> nodes({addition, subtraction, dice_roll});
   std::lock_guard l(repo_mutex);  // You're taking too long?
   auto character_sheet = repo.get_character_sheet(request.character_name);
+  if (!character_sheet) {
+    out.write_message("no such character");
+    return false;
+  }
+  auto matches = character_sheet->matching_stats(request.stat);
+  if (matches.empty()) {
+    out.write_message("no such statistic");
+    return false;
+  }
+  if (matches.size() > 1) {
+    out.write_message(std::format("ambiguous statistic: {}", join_matches(matches)));
+    return false;
+  }
+  const std::string & stat_name = matches.front();
   auto node = nodes.string_to_node(request.dice_expression);
   if (!node) {
       std::cerr << "'" << request.dice_expression << "' is not a valid dice expression.";
@@ -36,7 +61,7 @@ bool SetStat::operator()(std::istringstream & in, const User & user, BotOutputPr
   }
   int new_value;
   int roll_value = node->evaluate();
-  int old_value = character_sheet->get_stat_value(request.stat);
+  int old_value = character_sheet->get_stat_value(stat_name);
   if (request.type == ChangeType::SET) {
       new_value = roll_value;
   }
@@ -46,9 +71,9 @@ bool SetStat::operator()(std::istringstream & in, const User & user, BotOutputPr
   else {
       new_value = old_value - roll_value;
   }
-  character_sheet->set_stat(request.stat, new_value);
+  character_sheet->set_stat(stat_name, new_value);
   answer = std::format("you rolled {} - {}'s {} was changed from {} to {}",
-                       roll_value, request.character_name, request.stat, old_value, new_value);
+                       roll_value, request.character_name, stat_name, old_value, new_value);
   std::cerr << "answer: " << answer << std::endl;
   out.write_message(answer);
   return true;
@@ -105,4 +130,3 @@ bool SheetRequest::operator()(std::istringstream & in, const User & user, BotOut
     out.write_message(to_string(*character_sheet));
     return true;
 }
-
