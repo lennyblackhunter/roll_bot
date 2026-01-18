@@ -20,7 +20,7 @@ struct StatChangeRequest {
     character_name(std::move(character_name)), stat(std::move(stat)), type(type), dice_expression(std::move(dice_expression)) {}
 };
 
-std::optional<StatChangeRequest> stat_change_from_string(std::istringstream & ss);
+std::optional<StatChangeRequest> stat_change_from_string(std::istream & ss);
 
 bool consume_token(const std::string & s, int & modifier, Hardness & hardness);
 

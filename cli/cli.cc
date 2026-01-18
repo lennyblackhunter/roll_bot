@@ -23,7 +23,10 @@ class StreamBotOutput : public BotOutputProtocol {
 class LocalUser: public User {
  public:
   LocalUser(const std::string & nickname) : _nickname(nickname) {}
-  auto operator=(const std::string & nickname) {_nickname = nickname;};
+  LocalUser & operator=(const std::string & nickname) {
+    _nickname = nickname;
+    return *this;
+  }
   std::string _nickname;
   std::string get_nickname() const {
     return _nickname;
@@ -148,4 +151,3 @@ int main() {
   );
   bot.run();
 }
-
