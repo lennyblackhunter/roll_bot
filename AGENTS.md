@@ -12,3 +12,8 @@ This repository is a C++ codebase built with Bazel.
 - This is a simple discord bot used for playing Call of Cthulhu 7th edition 
 - It implements basic operations on characters like rolling for statistics etc.
 - There is not yet working //:cli target that implements local version of the client for testing.
+
+### Running
+
+Example character sheet repository is located under cthulhu/test_repo
+You can use //:cli target to check whether everything is working
