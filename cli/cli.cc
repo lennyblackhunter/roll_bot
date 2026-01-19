@@ -17,6 +17,10 @@ class StreamBotOutput : public BotOutputProtocol {
   void write_message(std::string_view msg) {
     *_out << msg << std::endl;
   }
+
+  void write_message(std::string_view msg, const OutputFormat & format) override {
+    write_message(msg);
+  }
 };
 
 

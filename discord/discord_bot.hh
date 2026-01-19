@@ -14,6 +14,7 @@ class DiscordOutput : public BotOutputProtocol {
  public:
   DiscordOutput(dpp::cluster * bot, dpp::snowflake channel_id);
   void write_message(std::string_view msg) override;
+  void write_message(std::string_view msg, const OutputFormat & format) override;
 };
 
 class DiscordUser : public User {

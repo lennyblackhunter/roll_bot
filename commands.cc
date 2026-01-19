@@ -127,6 +127,6 @@ bool SheetRequest::operator()(std::istringstream & in, const User & user, BotOut
         std::cerr << "Could not found character sheet of '" << character_name << "'\n";
         return false;
     }
-    out.write_message(to_string(*character_sheet));
+    out.write_message(to_string(*character_sheet), OutputFormat{.table = true});
     return true;
 }

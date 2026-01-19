@@ -5,11 +5,19 @@
 #include <map>
 #include <string_view>
 #include <format>
+#include <vector>
 
+
+struct OutputFormat {
+  bool table = false;
+};
 
 class BotOutputProtocol {
  public:
   virtual void write_message(std::string_view msg) = 0;
+  virtual void write_message(std::string_view msg, const OutputFormat & format) {
+    write_message(msg);
+  }
   virtual ~BotOutputProtocol() {}
 };
 
@@ -32,6 +40,11 @@ struct CommandHandler {
   std::string help;
 };
 
+struct CommandInfo {
+  std::string command;
+  std::string help;
+};
+
 class Bot {
  public:
 
@@ -42,6 +55,10 @@ class Bot {
     auto handler = _handlers.find(command);
     if (handler == _handlers.end()) {
       out.write_message(std::format("Command {} not found.", command));
+      auto list = short_command_list(5);
+      if (!list.empty()) {
+        out.write_message(std::format("Available commands: {}", list));
+      }
       return BotStatus::COMMAND_NOT_FOUND;
     }
     if (!handler->second.handler(ss, user, out)) {
@@ -55,6 +72,34 @@ class Bot {
       .handler = h,
       .help = std::string(help)
     }; //TODO: Better insert plz.
+  }
+
+  std::vector<CommandInfo> list_handlers() const {
+    std::vector<CommandInfo> result;
+    result.reserve(_handlers.size());
+    for (const auto & [name, handler] : _handlers) {
+      result.push_back(CommandInfo{.command = name, .help = handler.help});
+    }
+    return result;
+  }
+
+  std::string short_command_list(std::size_t max_count) const {
+    std::string result;
+    std::size_t count = 0;
+    for (const auto & [name, handler] : _handlers) {
+      if (max_count > 0 && count >= max_count) {
+        break;
+      }
+      if (count > 0) {
+        result += ", ";
+      }
+      result += name;
+      ++count;
+    }
+    if (max_count > 0 && _handlers.size() > max_count) {
+      result += std::format(", ... ({} total)", _handlers.size());
+    }
+    return result;
   }
 
   virtual ~Bot() = default;
