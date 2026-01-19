@@ -133,7 +133,6 @@ std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_s
         }
     };
 
-    out << "```text\n";
     out << character_sheet.name << "\n";
     out << "Resources: ";
     bool first = true;
@@ -149,7 +148,6 @@ std::ostream & operator<<(std::ostream & out, const CharacterSheet & character_s
     out << "\n";
     print_group("Attributes:", [](const Stat & s){ return s.stat_type == StatType::ATTRIBUTE; }, 2);
     print_group("Abilities:", [](const Stat & s){ return s.stat_type == StatType::ABILITY; }, 3);
-    out << "```\n";
     return out;
 }
 

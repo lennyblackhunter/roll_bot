@@ -14,6 +14,15 @@ void DiscordOutput::write_message(std::string_view msg) {
   _bot->message_create(dpp::message(_channel_id, std::string(msg)));
 }
 
+void DiscordOutput::write_message(std::string_view msg, const OutputFormat & format) {
+  if (format.table) {
+    std::string wrapped = std::string("```text\n") + std::string(msg) + "\n```";
+    write_message(wrapped);
+    return;
+  }
+  write_message(msg);
+}
+
 DiscordUser::DiscordUser(const dpp::guild_member & member)
     : _nickname(member.get_nickname()), _mention(member.get_mention()) {}
 
