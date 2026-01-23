@@ -34,6 +34,7 @@ cc_binary(
 cc_test(
   name = "test",
   srcs = ["test.cc"],
+  data = glob(["test_repo/*.json"]),
   deps = [
     "//:utils",
     ":character_sheet",

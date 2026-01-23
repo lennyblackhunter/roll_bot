@@ -4,6 +4,7 @@ module(
 )
 
 bazel_dep(name = "dpp", version = "3.3.1.bcr.7")
+bazel_dep(name = "rules_python", version = "0.40.0")
 
 git_override(
   module_name = "dpp",
@@ -11,3 +12,11 @@ git_override(
   branch = "jknurek/bazel",
 )
 
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+  hub_name = "pip",
+  python_version = "3.11",
+  requirements_lock = "//sheet_render:requirements.txt",
+)
+
+use_repo(pip, "pip")

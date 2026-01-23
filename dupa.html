@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Character Sheet</title>
+    <style>
+      :root {
+        --bg: #f6f1e7;
+        --ink: #2b2217;
+        --accent: #9b7d4c;
+        --panel: #fffaf0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Georgia", "Times New Roman", serif;
+        color: var(--ink);
+        background: radial-gradient(circle at top, #fffdf8, var(--bg));
+      }
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 20mm 16mm;
+        background: linear-gradient(180deg, #fffdf8, var(--bg));
+      }
+      .header {
+        border: 2px solid var(--accent);
+        padding: 10px 14px;
+        text-align: center;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 20px;
+      }
+      .name {
+        margin: 12px 0 24px;
+        font-size: 28px;
+        text-align: center;
+      }
+      .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--accent);
+        padding: 10px 12px;
+        border-radius: 6px;
+      }
+      .panel h2 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 4px;
+      }
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 0;
+        font-family: "Verdana", "Arial", sans-serif;
+        font-size: 12px;
+      }
+      .stat-name { text-transform: capitalize; }
+      .abilities-list {
+        column-count: 2;
+        column-gap: 16px;
+      }
+      .abilities-list .stat {
+        break-inside: avoid;
+      }
+      .footer {
+        margin-top: 24px;
+        font-size: 11px;
+        text-align: center;
+        color: #5d4a31;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="header">Character Sheet</div>
+      <div class="name">Anna</div>
+      <div class="columns">
+        <div class="panel">
+          <h2>Attributes</h2>
+          
+          <div class="stat">
+            <span class="stat-name">budowa_ciała</span>
+            <span class="stat-value">50</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">inteligencja</span>
+            <span class="stat-value">80</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">kondycja</span>
+            <span class="stat-value">55</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">moc</span>
+            <span class="stat-value">50</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">siła</span>
+            <span class="stat-value">60</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">wygląd</span>
+            <span class="stat-value">60</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">wykształcenie</span>
+            <span class="stat-value">79</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">zręczność</span>
+            <span class="stat-value">45</span>
+          </div>
+          
+          <h2>Resources</h2>
+          
+          <div class="stat">
+            <span class="stat-name">poczytalność</span>
+            <span class="stat-value">45</span>
+          </div>
+          
+          <div class="stat">
+            <span class="stat-name">szczęście</span>
+            <span class="stat-value">32</span>
+          </div>
+          
+        </div>
+        <div class="panel">
+          <h2>Abilities</h2>
+          <div class="abilities-list">
+            
+            <div class="stat">
+              <span class="stat-name">antropologia</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">archeologia</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">broń palna (karabin/strzelba)</span>
+              <span class="stat-value">25</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">broń palna (krótka)</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">charakteryzacja</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">elektryka</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">gadanina</span>
+              <span class="stat-value">5</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">historia</span>
+              <span class="stat-value">45</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">jeździectwo</span>
+              <span class="stat-value">5</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">język obcy</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">język ojczysty</span>
+              <span class="stat-value">79</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">korz</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">korzystanie z bibliotek</span>
+              <span class="stat-value">64</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">księgowość</span>
+              <span class="stat-value">5</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">magia</span>
+              <span class="stat-value">6</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">majętność</span>
+              <span class="stat-value">24</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">mechanika</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">medycyna</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">mity cthulhu</span>
+              <span class="stat-value">0</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">nasłuchiwanie</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">nauka</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">nawigacja</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">obsługa ciężkiego sprzętu</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">okultyzm</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">perswazja</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">pierwsza pomoc</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">pilotowanie</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">prawo</span>
+              <span class="stat-value">5</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">prowadzenie samochodu</span>
+              <span class="stat-value">40</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">psychoanaliza</span>
+              <span class="stat-value">5</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">psychologia</span>
+              <span class="stat-value">57</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">pływanie</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">rzucanie</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">sczęście</span>
+              <span class="stat-value">-14</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">skakanie</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">spostrzegawczość</span>
+              <span class="stat-value">60</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">szcżęście</span>
+              <span class="stat-value">6</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">sztuka przetrwania</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">sztuka/rzemiosło</span>
+              <span class="stat-value">65</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">tropienie</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">ukrywanie</span>
+              <span class="stat-value">20</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">unik</span>
+              <span class="stat-value">22</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">urok osobisty</span>
+              <span class="stat-value">50</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">walka wręcz (bijatyka)</span>
+              <span class="stat-value">34</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">wiedza o naturze</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">wspinaczka</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">wycena</span>
+              <span class="stat-value">30</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">wytrzymałość</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">zastraszanie</span>
+              <span class="stat-value">15</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">zręczne palce</span>
+              <span class="stat-value">10</span>
+            </div>
+            
+            <div class="stat">
+              <span class="stat-name">ślusarstwo</span>
+              <span class="stat-value">1</span>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div class="footer">Generated by roll_bot sheet renderer</div>
+    </div>
+  </body>
+</html>

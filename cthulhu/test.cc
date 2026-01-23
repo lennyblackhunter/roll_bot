@@ -1,51 +1,65 @@
+#include <cstdlib>
+#include <filesystem>
 #include <iostream>
+#include <map>
+#include <string>
 
 #include "cthulhu/character_sheet.hh"
-#include "utils.hh"
+
+namespace fs = std::filesystem;
 
 int main() {
-//    Stat s{123, false};
-//    json js = s;
-//    std::cout << join("+", "123", "321", "696");
-    CharacterSheetRepo repo{"/home/benhauer-adm/Nie_praca/roll_bot/roll_bot/tree/cthulhu/test/repo"};
-//    CharacterSheetRepo repo2{"/dupa/dupa"};
+    int failures = 0;
+    auto expect = [&](bool condition, const std::string & message) {
+        if (!condition) {
+            std::cerr << "FAIL: " << message << "\n";
+            failures++;
+        }
+    };
 
-    std::string name = "Annabelle";
-    std::map<std::string, Stat> stats = {
-            {"wytrzymałość", Stat(12, false, StatType::IDK)},
-            {"magia", Stat(7, false, StatType::IDK)},
-            {"szczęście", Stat(50, false, StatType::RESOURCE)},
-            {"poczytalność", Stat(50, false, StatType::RESOURCE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"korzystanie_z_bibliotek", Stat(30, false)},
-            {"okultyzm", Stat(25, false)},
-            {"urok_osobisty", Stat(30, false)},
-    };
-    std::string anna_name = "Anna";
-    std::map<std::string, Stat> anna_stats = {
-            {"wytrzymałość", Stat(12, false, StatType::IDK)},
-            {"magia", Stat(7, false, StatType::IDK)},
-            {"szczęście", Stat(50, false, StatType::RESOURCE)},
-            {"poczytalność", Stat(50, false, StatType::RESOURCE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"siła", Stat(50, false, StatType::ATTRIBUTE)},
-            {"korzystanie_z_bibliotek", Stat(30, false)},
-            {"okultyzm", Stat(25, false)},
-            {"urok_osobisty", Stat(30, false)},
-    };
-    CharacterSheet example_sheet = CharacterSheet(anna_name, anna_stats);
-    json sheet_json = example_sheet;
-    std::cout << sheet_json << std::endl;
-    std::cout << "miau?" << std::endl;
+    const char * runfiles_root = std::getenv("TEST_SRCDIR");
+    const char * workspace = std::getenv("TEST_WORKSPACE");
+    fs::path repo_path = "cthulhu/test_repo";
+    if (runfiles_root && workspace) {
+        repo_path = fs::path(runfiles_root) / workspace / "cthulhu/test_repo";
+    }
+
+    if (!fs::exists(repo_path)) {
+        std::cerr << "FAIL: test repo not found at " << repo_path << "\n";
+        return 1;
+    }
+
+    CharacterSheetRepo repo(repo_path.string());
     repo.load();
-    std::cout << "miau" << std::endl;
-    std::cout << repo.get_character_sheet("Stefan")->get_name() << std::endl;
-    std::cout << "miau!" << std::endl;
-    repo.add(example_sheet);
-    std::cout << "miau!!" << std::endl;
-    repo.save();
+    expect(repo.players().size() == 3, "expected 3 players in test repo");
+    expect(repo.get_character_sheet("Anna") != nullptr, "expected Anna sheet in test repo");
+
+    const char * tmp_root = std::getenv("TEST_TMPDIR");
+    fs::path tmp_dir = tmp_root ? fs::path(tmp_root) : fs::temp_directory_path();
+    fs::path save_repo_path = tmp_dir / "roll_bot_test_repo";
+    if (fs::exists(save_repo_path)) {
+        fs::remove_all(save_repo_path);
+    }
+    fs::create_directories(save_repo_path);
+
+    CharacterSheetRepo save_repo(save_repo_path.string());
+    StatsT stats = {
+        {"strength", Stat(50, false, StatType::ATTRIBUTE)},
+        {"sanity", Stat(60, false, StatType::RESOURCE)},
+    };
+    save_repo.add(CharacterSheet("Bob", stats));
+    save_repo.save();
+
+    fs::path bob_sheet_path = save_repo_path / "Bob.json";
+    expect(fs::exists(bob_sheet_path), "expected saved sheet file to exist");
+
+    CharacterSheetRepo reload_repo(save_repo_path.string());
+    reload_repo.load();
+    expect(reload_repo.players().size() == 1, "expected one player after reload");
+    expect(reload_repo.get_character_sheet("Bob") != nullptr, "expected Bob after reload");
+
+    if (failures != 0) {
+        std::cerr << failures << " test(s) failed\n";
+    }
+    return failures == 0 ? 0 : 1;
 }
